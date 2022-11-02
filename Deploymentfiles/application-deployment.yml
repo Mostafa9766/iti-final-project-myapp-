@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-app
+  name: myapp
   namespace: application-ns
 spec:
   replicas: 1
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: my-app-container
-          image: m0stafaahmed/myapp:lts
+          image: m0stafaahmed/my-app:lts
           ports:
             - name: app-port
               containerPort: 3000
