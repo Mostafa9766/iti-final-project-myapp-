@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: my-app-container
-          image: m0stafaahmed/myapp-python:lts
+          image: m0stafaahmed/myapp:lts
           ports:
             - name: app-port
-              containerPort: 8000
+              containerPort: 3000
