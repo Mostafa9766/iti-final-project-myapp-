@@ -1,5 +1,5 @@
 FROM node:12
-COPY nodeapp /my-app
+COPY node-app /my-app
 WORKDIR /myapp
 RUN npm install
 CMD ["node", "/my-app/app.js"]
