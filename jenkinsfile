@@ -1,0 +1,44 @@
+pipeline {
+    agent {label 'agent-ec2'}
+
+    stages {
+        stage('preparation1') {
+            steps {
+                git 'https://github.com/Mostafa9766/iti-final-project-myapp-.git'
+            }
+        }
+        
+        stage('CI') {
+            steps {
+                sh 'docker build . -t m0stafaahmed/my-app:lts'
+                withCredentials([usernamePassword(credentialsId: 'docker-account', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]){
+                sh 'docker login -u ${USERNAME} -p ${PASSWORD}'
+                sh 'docker push m0stafaahmed/my-app:lts'
+                }
+              }
+            }
+        
+        stage('preparation2') {
+            steps {
+                git 'https://github.com/Mostafa9766/iti-final-project-myapp-.git'
+            }
+        }
+        
+        stage('CD') {
+            steps 
+            {
+                //sh 'kubectl create namespace application-ns'
+                sh '''
+                kubectl apply -f ./Deploymentfiles/application-deployment.yml --namespace=application-ns
+                kubectl apply -f ./Deploymentfiles/application-service.yml --namespace=application-ns
+                '''
+            }
+        }
+    }
+    
+     post {
+            success { slackSend color: "#439FE0" , message:"Build deployed successfully - ${env.JOB_NAME} ${env.BUILD_NUMBER}" }      
+            failure { slackSend failOnError:true , message:"Build failed - ${env.JOB_NAME} ${env.BUILD_NUMBER} " }
+            
+     }
+}
